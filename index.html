@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的時尚首頁</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #fce3ff, #ffe8f2, #e6f0ff);
+      background-size: 300% 300%;
+      animation: gradientShift 8s ease-in-out infinite;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(14px);
+      padding: 40px 50px;
+      border-radius: 25px;
+      box-shadow: 0 10px 40px rgba(255,182,193,0.4);
+      width: 90%;
+      max-width: 420px;
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #ffb6c1;
+      box-shadow: 0 0 25px rgba(255,182,193,0.6);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin-top: 15px;
+      color: #333;
+    }
+    h1 span { color: #ff69b4; }
+
+    .bio {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 8px;
+      margin-bottom: 25px;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .btn {
+      text-decoration: none;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -50%;
+      width: 200%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.25);
+      transform: skewX(-30deg);
+      transition: 0.4s;
+    }
+
+    .btn:hover::before { left: 100%; }
+
+    .github { background: #333; }
+    .email { background: #ff7eb3; }
+    .linkedin { background: #0077b5; }
+    .instagram { background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af); }
+
+    .btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      letter-spacing: 1px;
+    }
+
+    footer {
+      margin-top: 25px;
+      font-size: 0.8rem;
+      color: #777;
+    }
+
+    /* 動畫 */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RWD 手機版 */
+    @media (max-width: 600px) {
+      .container { padding: 25px; }
+      h1 { font-size: 1.3rem; }
+      .btn { padding: 10px; font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="background"></canvas>
+
+  <div class="container">
+    <img src="https://picsum.photos/200?grayscale" alt="avatar" class="avatar">
+    <h1>Hi，我是 <span>你的名字</span></h1>
+    <p class="bio">💄 美妝 ✨ 時尚 💋 分享我的光彩生活</p>
+
+    <div class="links">
+      <a href="https://github.com/你的帳號" target="_blank" class="btn github">GitHub</a>
+      <a href="mailto:你的信箱@example.com" class="btn email">Email</a>
+      <a href="https://www.linkedin.com/in/你的連結" target="_blank" class="btn linkedin">LinkedIn</a>
+      <a href="https://www.instagram.com/你的IG帳號" target="_blank" class="btn instagram">Instagram</a>
+    </div>
+
+    <footer>
+      <p>© 2025 by 你的名字 ｜ Made with 💖</p>
+    </footer>
+  </div>
+
+  <script>
+    // 🌟 星空 + 愛心背景動畫
+    const canvas = document.getElementById("background");
+    const ctx = canvas.getContext("2d");
+    let stars = [];
+    let hearts = [];
+    const numStars = 80;
+    const numHearts = 10;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    // 初始化星星
+    for (let i = 0; i < numStars; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.5 + 0.5,
+        alpha: Math.random(),
+        speed: Math.random() * 0.5 + 0.2
+      });
+    }
+
+    // 初始化愛心
+    for (let i = 0; i < numHearts; i++) {
+      hearts.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 8 + 6,
+        speed: Math.random() * 0.3 + 0.2,
+        alpha: Math.random() * 0.8 + 0.2
+      });
+    }
+
+    function drawHeart(x, y, size, alpha) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(size / 20, size / 20);
+      ctx.beginPath();
+      ctx.moveTo(0, -5);
+      ctx.bezierCurveTo(-5, -10, -12, 0, 0, 10);
+      ctx.bezierCurveTo(12, 0, 5, -10, 0, -5);
+      ctx.closePath();
+      ctx.fillStyle = `rgba(255, 105, 180, ${alpha})`;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 星星
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${star.alpha})`;
+        ctx.fill();
+        star.y += star.speed;
+        if (star.y > canvas.height) star.y = 0;
+        star.alpha = 0.4 + Math.sin(Date.now() / 600 + star.x) * 0.3;
+      });
+
+      // 愛心
+      hearts.forEach(h => {
+        drawHeart(h.x, h.y, h.size, h.alpha);
+        h.y += h.speed;
+        if (h.y > canvas.height + 20) {
+          h.y = -10;
+          h.x = Math.random() * canvas.width;
+        }
+      });
+
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
